@@ -2,7 +2,7 @@ from aiogram import Router, F
 from aiogram.types import Message
 from PIL import Image
 from io import BytesIO
-from ocr_engine.engine import OCREngine
+from ocr_engine import OCREngine
 from ocr_engine.config import OCRConfig
 from ocr_engine.classifier import predict
 from bot.logger import logger
