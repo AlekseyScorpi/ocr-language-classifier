@@ -79,6 +79,8 @@ class OCREngine:
             texts[i] = " ".join(texts[i])
         return {'counts': counts, 'texts': texts}
     
+    def predict(self, img: Image, crop_batch=20):
+        return self.__call__(img, crop_batch)
 
     def __call__(self, img: Image, crop_batch=20):
         crops = self.get_crops(img=img)
