@@ -1,7 +1,8 @@
 import asyncio
 from aiogram import Bot, Dispatcher
+from aiogram.methods import DeleteWebhook
 from bot.config import BotConfig
-from bot.handlers import image
+from bot.handlers import image, commands
 from bot.logger import logger
 
 async def main():
@@ -10,8 +11,17 @@ async def main():
     dp = Dispatcher()
 
     dp.include_router(image.router)
+    dp.include_router(commands.router)
     logger.info("Bot is started!")
-    await dp.start_polling(bot)
+    try:
+        await bot(DeleteWebhook(drop_pending_updates=True))
+        await dp.start_polling(bot)
+    finally:
+        await bot.session.close()
+        logger.info("✅ Correct bot stop")
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        print("🛑 Stopping program")
