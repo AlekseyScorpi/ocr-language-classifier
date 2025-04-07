@@ -173,5 +173,5 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 
-# models dir, which should contains fasttext bin model and tessdata
-models
+# data dir which includes tessdata dir and models dir
+data

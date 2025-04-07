@@ -1,12 +1,31 @@
 from PIL import Image
 import threading
 import numpy as np
-
+from mmocr.apis import TextDetInferencer
+from tesserocr import PyTessBaseAPI, PSM, OEM
 
 class OCREngine:
     def __init__(self, apis, ocr):
         self.ocr = ocr
         self.apis = apis
+
+    @staticmethod
+    def init_tesseract_apis(tessdata_dir: str):
+        apis = []
+        for script in ['script/Cyrillic', 'script/Georgian', 'script/HanS', 'script/Japanese', 'script/Latin', 'kor']:
+            api = PyTessBaseAPI(path=tessdata_dir, lang=script, psm=PSM.SINGLE_LINE, oem=OEM.LSTM_ONLY)
+            if script != 'script/Latin':
+                api.SetVariable("tessedit_char_blacklist", "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789")
+            else:
+                api.SetVariable("tessedit_char_blacklist", "0123456789")
+            apis.append(api)
+        return apis
+    
+    @staticmethod
+    def create(tessdata_dir: str):
+        inferencer = TextDetInferencer(model='TextSnake')
+        apis = OCREngine.init_tesseract_apis(tessdata_dir)
+        return OCREngine(apis=apis, ocr=inferencer)
     
     def get_crops(self, img: Image):
         if img.mode != 'RGB':

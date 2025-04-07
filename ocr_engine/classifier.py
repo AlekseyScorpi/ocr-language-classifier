@@ -1,12 +1,12 @@
 import fasttext
 from .utils import convert
+from .config import OCRConfig
 
-text_classifier = fasttext.load_model("models/lid.176.bin")
+ocr_config = OCRConfig.load()
+
+text_classifier = fasttext.load_model(ocr_config.fasttext_path)
 
 def predict(result):
-    """
-    result — результат вызова движка OCR: {'label': int, 'text': str}
-    """
     if result['label'] not in (0, 4):
         label = convert[result['label']]
     else:

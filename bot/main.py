@@ -6,8 +6,8 @@ from bot.handlers import image, commands
 from bot.logger import logger
 
 async def main():
-    config = BotConfig.load()
-    bot = Bot(token=config.token)
+    bot_config = BotConfig.load()
+    bot = Bot(token=bot_config.token)
     dp = Dispatcher()
 
     dp.include_router(image.router)

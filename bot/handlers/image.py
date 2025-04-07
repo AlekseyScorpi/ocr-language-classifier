@@ -2,16 +2,16 @@ from aiogram import Router, F
 from aiogram.types import Message
 from PIL import Image
 from io import BytesIO
-from ocr_engine.config import get_ocr_engine
+from ocr_engine.engine import OCREngine
+from ocr_engine.config import OCRConfig
 from ocr_engine.classifier import predict
 from bot.logger import logger
 from ocr_engine.lang_map import LANG_ID_TO_NAME
 
-from bot.config import BotConfig
 
 router = Router()
-config = BotConfig.load()
-ocr_engine = get_ocr_engine(config.tessdata_dir)
+ocr_config = OCRConfig.load()
+ocr_engine = OCREngine.create(tessdata_dir=ocr_config.tessdata_path)
 
 @router.message(F.photo)
 async def handle_image(message: Message):

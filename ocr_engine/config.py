@@ -1,19 +1,14 @@
-from mmocr.apis import TextDetInferencer
-from tesserocr import PyTessBaseAPI, PSM, OEM
-from .engine import OCREngine
+from dataclasses import dataclass
+import os
 
-def init_tesseract_apis(tessdata_dir: str):
-    apis = []
-    for script in ['script/Cyrillic', 'script/Georgian', 'script/HanS', 'script/Japanese', 'script/Latin', 'kor']:
-        api = PyTessBaseAPI(path=tessdata_dir, lang=script, psm=PSM.SINGLE_LINE, oem=OEM.LSTM_ONLY)
-        if script != 'script/Latin':
-            api.SetVariable("tessedit_char_blacklist", "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789")
-        else:
-            api.SetVariable("tessedit_char_blacklist", "0123456789")
-        apis.append(api)
-    return apis
+@dataclass(frozen=True)
+class OCRConfig:
+    tessdata_path: str
+    fasttext_path: str
 
-def get_ocr_engine(tessdata_dir: str):
-    inferencer = TextDetInferencer(model='TextSnake')
-    apis = init_tesseract_apis(tessdata_dir)
-    return OCREngine(apis=apis, ocr=inferencer)
+    @classmethod
+    def load(cls) -> "OCRConfig":
+        return cls(
+            tessdata_path=os.getenv("TESSDATA_PATH", "./data/tessdata"),
+            fasttext_path=os.getenv("FASTTEXT_PATH", "./data/models/lid.176.bin"),
+        )
