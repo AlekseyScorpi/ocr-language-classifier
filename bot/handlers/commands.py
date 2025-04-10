@@ -1,7 +1,7 @@
 from aiogram import Router
 from aiogram.types import Message
 from aiogram.filters import Command
-from ocr_engine.utils import get_list_languages
+from ocr_engine.utils import get_languages_string
 
 router = Router()
 
@@ -15,7 +15,7 @@ async def start_handler(message: Message):
 async def start_handler(message: Message):
     await message.answer(
         "📝 Вот список языков, которые я определяю:\n"
-        f"{', '.join(get_list_languages())}"
+        f"{get_languages_string()}"
     )
 
 @router.message(Command("help"))

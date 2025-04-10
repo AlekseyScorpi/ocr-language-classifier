@@ -25,3 +25,6 @@ def get_list_languages():
             "Монгольский", "Норвежский", "Польский", "Русский",
             "Украинский", "Китайский"
             ]
+
+def get_languages_string():
+    return "\n".join([f"{i+1}. {lang}" for i, lang in enumerate(sorted(get_list_languages()))])
